@@ -1,0 +1,48 @@
+﻿name: Model Training
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_type:
+        description: 'Model to train'
+        required: true
+        type: choice
+        options:
+          - component
+          - segmentation
+          - anomaly
+          - all
+      epochs:
+        description: 'Number of epochs'
+        required: false
+        default: '100'
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Train model
+      run: |
+        if [ "${{ github.event.inputs.model_type }}" == "all" ]; then
+          python scripts/train_all.py --epochs ${{ github.event.inputs.epochs }}
+        else
+          python src/training/train_${{ github.event.inputs.model_type }}.py --epochs ${{ github.event.inputs.epochs }}
+        fi
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-models
+        path: models/weights/
