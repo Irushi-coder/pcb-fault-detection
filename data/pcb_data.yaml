@@ -1,0 +1,14 @@
+﻿path: data/processed
+train: train/images
+val: val/images
+test: test/images
+
+nc: 6
+
+names:
+  0: Missing_hole
+  1: Spurious_copper
+  2: Spur
+  3: Short
+  4: Open_circuit
+  5: Mouse_bite
