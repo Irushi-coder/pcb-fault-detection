@@ -44,8 +44,7 @@ async def detect_defects(file: UploadFile = File(...)):
     
     try:
         # Run detection
-        results = model.predict(temp_path, conf=0.25)
-        
+        results = model.predict(temp_path, conf=0.25)  # or 0.6, 0.7 - test which works best
         # Process results
         defects = []
         for result in results:
